@@ -47,3 +47,40 @@ This repo includes the sources of:
 
 Both are included under `libs/` for portability and ease of build.  
 You don’t need to install anything manually – just clone and build.
+
+---
+
+## 🧠 Key Concepts (Graphics Programming)
+
+This project is not just code – it’s a way to understand the fundamentals of real-time graphics. Here are the most important terms explained:
+
+| Term | Meaning |
+|------|---------|
+| **Shader** | A small GPU program that controls rendering |
+| **Vertex Shader** | Transforms each vertex (e.g. position, rotation, scaling) |
+| **Fragment Shader** | Colors each pixel (e.g. texture, lighting) |
+| **Vertex** | A point in space used to build geometry |
+| **VBO (Vertex Buffer Object)** | Stores vertex data on the GPU |
+| **VAO (Vertex Array Object)** | Describes how vertex data is laid out |
+| **Uniform** | A global shader variable set from the CPU |
+| **Model/View/Projection** | Transformations for objects, camera and perspective |
+| **Render Loop** | Main loop for drawing and updating the screen each frame |
+
+This table serves as a quick reference for understanding the graphics pipeline while working on this project.
+
+
+## 🌌 Universe Scale & Realism
+
+To make the Solar System feel real while keeping it viewable, we've used **real astronomical data scaled down** to fit in OpenGL's coordinate space. The goal is to maintain **proportions** – distances and sizes – between celestial objects without visual distortion.
+
+### 🌍 Planetary Parameters (Simplified)
+| Object | Diameter (km) | Distance to Sun (km) |
+|--------|----------------|----------------------|
+| Sun    | 1,390,000      | 0                    |
+| Earth  | 12,742         | 149,600,000          |
+| Moon   | 3,474          | 149,984,400 (Sun + Earth-Moon distance) |
+
+### 🧮 Scaling Formula
+We scale all distances and sizes by a constant:
+```cpp
+#define SCALE 1.0f / 1e8f  // 1 OpenGL unit = 100 million kilometers

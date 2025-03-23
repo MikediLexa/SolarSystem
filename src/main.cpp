@@ -1,6 +1,7 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include "renderer.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -26,7 +27,7 @@ int main() {
         glfwTerminate();
         return -1;
     }
-
+  
     glfwMakeContextCurrent(window);
 
     if (!gladLoadGL((GLADloadfunc)glfwGetProcAddress)) {
@@ -37,12 +38,19 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     // Basic OpenGL settings
-    glClearColor(0.05f, 0.05f, 0.1f, 1.0f);
+    glClearColor(0.01f, 0.01f, 0.1f, 1.0f);
+
+    Renderer renderer;
+    float timeLast = glfwGetTime();
 
     while (!glfwWindowShouldClose(window)) {
+        float timeNow = glfwGetTime();
+        float deltaTime = timeNow - timeLast;
+        timeLast = timeNow;
+
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Hier kommt bald das Zeichnen der Sonne & Planeten
+        renderer.drawCircle(glm::vec2(0.0f, 0.0f), 0.2f, glm::vec3(1.0f, 0.9f, 0.3f)); // Gelbe Sonne
 
         glfwSwapBuffers(window);
         glfwPollEvents();
