@@ -5,9 +5,8 @@
 #include <sstream>
 #include <iostream>
 
-Renderer::Renderer() {
+Renderer::Renderer(GLFWwindow* window) :window(window) {
     initCircleGeometry(100); // 100 Segmente = schöner Kreis
-
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
     glBindVertexArray(vao);
@@ -33,11 +32,20 @@ void Renderer::drawCircle(glm::vec2 pos, float radius, glm::vec3 color) {
 
     glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
     model = glm::scale(model, glm::vec3(radius, radius, 1.0f));
-    glm::mat4 view = glm::mat4(1.0f); // 2D = keine Kamera
-    glm::mat4 proj = glm::ortho(-1.f, 1.f, -1.f, 1.f); // Normiertes Fenster [-1,1]
+    
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    float aspect = static_cast<float>(width) / height;
+    float viewSize = 50.0f; // → Ersetze durch eine Instanzvariable
+    glm::mat4 proj;
+    if (aspect >= 1.0f) {
+        proj = glm::ortho(-viewSize * aspect, viewSize * aspect, -viewSize, viewSize);
+    } else {
+        proj = glm::ortho(-viewSize, viewSize, -viewSize / aspect, viewSize / aspect);
+    }
 
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "u_model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "u_view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "u_view"), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f))); // 2D = keine Kamera
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "u_proj"), 1, GL_FALSE, glm::value_ptr(proj));
     glUniform3fv(glGetUniformLocation(shaderProgram, "u_color"), 1, glm::value_ptr(color));
 
